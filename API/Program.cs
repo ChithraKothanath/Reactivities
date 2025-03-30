@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(opt=>{
 opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
+builder.Services.AddCors();
 var app = builder.Build();
 
 using var scope=app.Services.CreateScope();
@@ -26,7 +26,7 @@ catch(Exception ex){
     logger.LogError(ex,"An Error  occured during migration");
     throw;
 }
-
+app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000","https://localhost:3000"));
 app.MapControllers();
 
 app.Run();
